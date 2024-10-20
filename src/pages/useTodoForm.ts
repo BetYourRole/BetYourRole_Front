@@ -1,19 +1,16 @@
 import { useState } from 'react';
-
-interface Role {
-  roleName: string;
-  roleDescription: string;
-}
+import { Data, Role } from './types';
 
 export const useTodoForm = () => {
-  const [formData, setFormData] = useState({
-    team: '',
+  const [formData, setFormData] = useState<Data>({
     name: '',
     inscription: '',
     headCount: 2,
     matchingType: 'RATIO',
     point: 100,
     visibility: false,
+    todos: [],
+    password: "",
   });
 
   const [roles, setRoles] = useState<Role[]>([]); // 역할 상태

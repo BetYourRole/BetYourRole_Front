@@ -1,15 +1,8 @@
 import React, { useState } from 'react';
+import { Data } from './types'
 
-interface StepOneFormProps {
-  formData: {
-    team: string;
-    name: string;
-    inscription: string;
-    headCount: number;
-    matchingType: string;
-    point: number;
-    visibility: boolean;
-  };
+interface StepOneFormProps{
+  formData: Data;
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   handleNext: () => void;
 }
@@ -20,7 +13,6 @@ const StepOneForm: React.FC<StepOneFormProps> = ({ formData, handleChange, handl
   // 유효성 검사 함수
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
-    if (!formData.team) newErrors.team = '팀 이름은 필수입니다.';
     if (!formData.name) newErrors.name = '방 이름은 필수입니다.';
     // if (!formData.inscription) newErrors.inscription = '방 설명은 필수입니다.';
     if (formData.headCount < 2) newErrors.headCount = '인원수는 2 이상이어야 합니다.';
@@ -38,20 +30,6 @@ const StepOneForm: React.FC<StepOneFormProps> = ({ formData, handleChange, handl
 
   return (
     <>
-      <div className="mb-4">
-        <label className="block text-gray-700 font-semibold mb-2">Team:</label>
-        <input
-          type="text"
-          name="team"
-          value={formData.team}
-          onChange={handleChange}
-          className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-            errors.team ? 'border-red-500' : ''
-          }`}
-          placeholder="Enter team"
-        />
-        {errors.team && <p className="text-red-500 text-sm">{errors.team}</p>}
-      </div>
 
       <div className="mb-4">
         <label className="block text-gray-700 font-semibold mb-2">방 이름:</label>

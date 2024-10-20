@@ -2,6 +2,7 @@ import React from 'react';
 import StepOneForm from './StepOneForm';
 import StepTwoForm from './StepTwoForm';
 import { useTodoForm } from './useTodoForm';
+import { API } from '../api/API'
 
 const TodoRoomForm: React.FC = () => {
   const { formData, roles, setRoles, step, setStep, handleChange, handleRoleChange } = useTodoForm();
@@ -12,8 +13,8 @@ const TodoRoomForm: React.FC = () => {
   
       if (prevRoles.length < updatedHeadCount) {
         const additionalRoles = Array.from({ length: updatedHeadCount - prevRoles.length }, () => ({
-          roleName: '',
-          roleDescription: '',
+          name: '',
+          description: '',
         }));
         return [...prevRoles, ...additionalRoles];
       } else if (prevRoles.length > updatedHeadCount) {
@@ -30,11 +31,14 @@ const TodoRoomForm: React.FC = () => {
   };
   
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Form submitted!");
-    console.log("FormData:", formData);
-    console.log("Roles:", roles);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    var data = formData;
+    data.todos = roles;
+    var result = await API().post("/todo-room", data);
+    // var result = await API().post("/test");
+    console.log("nn")
+    console.log(result);
   };
 
   return (

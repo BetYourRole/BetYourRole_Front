@@ -1,9 +1,5 @@
 import React from 'react';
-
-interface Role {
-  roleName: string;
-  roleDescription: string;
-}
+import { Role } from './types';
 
 interface StepTwoFormProps {
   roles: Role[];
@@ -20,8 +16,8 @@ const StepTwoForm: React.FC<StepTwoFormProps> = ({ roles, handleRoleChange, hand
           <label className="block text-gray-700 font-semibold mb-2">역할명 {index + 1}:</label>
           <input
             type="text"
-            name="roleName"
-            value={role.roleName}
+            name="name"
+            value={role.name}
             onChange={(e) => handleRoleChange(index, e)}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder={`역할명 ${index + 1}`}
@@ -30,8 +26,8 @@ const StepTwoForm: React.FC<StepTwoFormProps> = ({ roles, handleRoleChange, hand
           <label className="block text-gray-700 font-semibold mb-2 mt-2">역할 설명:</label>
           <input
             type="text"
-            name="roleDescription"
-            value={role.roleDescription}
+            name="description"
+            value={role.description}
             onChange={(e) => handleRoleChange(index, e)}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder={`역할 설명 ${index + 1}`}

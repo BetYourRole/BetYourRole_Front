@@ -4,7 +4,7 @@ import {Link, useLocation, useNavigate} from 'react-router-dom';
 const Nav:React.FC = () => {
     return (
         <div className='flex justify-between px-16 py-8 items-center sticky w-full bg-white top-0'>
-                <Link to='/'><div className="logo text-2xl font-bold">Bet Your Task</div></Link>
+                <Link to='/'><div className="logo text-2xl font-bold">Bet Your Role</div></Link>
             <div className='menu flex gap-8'>
                 <Menu url="/" name="새 할일 생성"/>
                 <Menu url="/how-to-use" name="사용방법"/>
