@@ -15,4 +15,16 @@ export interface Role {
     password: string;
     todos: Role[];
   }
+
+  export interface TodoRoom{
+    id: number;
+    name: string;
+    inscription: string;
+    headCount: number;
+    matchingType: string;
+    point: number;
+    visibility: boolean;
+    password: string;
+    todos: Role[];
+  }
   

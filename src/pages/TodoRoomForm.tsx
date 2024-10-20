@@ -3,8 +3,11 @@ import StepOneForm from './StepOneForm';
 import StepTwoForm from './StepTwoForm';
 import { useTodoForm } from './useTodoForm';
 import { API } from '../api/API'
+import { TodoRoom } from './types'
+import { redirect, useNavigate } from 'react-router-dom';
 
 const TodoRoomForm: React.FC = () => {
+  const navigate = useNavigate();
   const { formData, roles, setRoles, step, setStep, handleChange, handleRoleChange } = useTodoForm();
 
   const handleNext = () => {
@@ -33,12 +36,12 @@ const TodoRoomForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    var data = formData;
+    const data = formData;
     data.todos = roles;
-    var result = await API().post("/todo-room", data);
-    // var result = await API().post("/test");
-    console.log("nn")
-    console.log(result);
+    const respone = await API().post("/todo-room", data);
+    const result:TodoRoom = respone.data;
+
+    navigate(`/todo-room/${result.id}`);
   };
 
   return (
