@@ -7,7 +7,7 @@ export interface Role {
   
   export interface Data {
     name: string;
-    inscription: string;
+    description: string;
     headCount: number;
     matchingType: string;
     point: number;
@@ -19,7 +19,7 @@ export interface Role {
   export interface TodoRoom{
     id: number;
     name: string;
-    inscription: string;
+    description: string;
     headCount: number;
     matchingType: string;
     point: number;

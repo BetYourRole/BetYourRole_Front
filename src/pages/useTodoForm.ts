@@ -4,7 +4,7 @@ import { Data, Role } from './types';
 export const useTodoForm = () => {
   const [formData, setFormData] = useState<Data>({
     name: '',
-    inscription: '',
+    description: '',
     headCount: 2,
     matchingType: "DEFERRED_RATIO",
     point: 100,

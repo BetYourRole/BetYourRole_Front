@@ -5,7 +5,7 @@ import { API } from '../api/API';
 interface Todo {
   id: number;
   name: string;
-  inscription: string;
+  description: string;
 }
 
 const AddParticipantPage: React.FC = () => {
@@ -92,7 +92,7 @@ const AddParticipantPage: React.FC = () => {
         {todos.map((todo, index) => (
           <div key={todo.id} className="mb-4">
             <p className="font-semibold text-gray-700">{todo.name}</p>
-            <p className="text-gray-500 text-sm">{todo.inscription}</p>
+            <p className="text-gray-500 text-sm">{todo.description}</p>
             <label className="block text-gray-700 mt-2">점수:</label>
             <input
               type="number"

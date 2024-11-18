@@ -14,7 +14,7 @@ const StepOneForm: React.FC<StepOneFormProps> = ({ formData, handleChange, handl
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
     if (!formData.name) newErrors.name = '방 이름은 필수입니다.';
-    // if (!formData.inscription) newErrors.inscription = '방 설명은 필수입니다.';
+    // if (!formData.description) newErrors.description = '방 설명은 필수입니다.';
     if (formData.headCount < 2) newErrors.headCount = '인원수는 2 이상이어야 합니다.';
     if (formData.point <= 1) newErrors.point = '포인트는 1보다 커야 합니다.';
 
@@ -50,15 +50,15 @@ const StepOneForm: React.FC<StepOneFormProps> = ({ formData, handleChange, handl
         <label className="block text-gray-700 font-semibold mb-2">방 설명:</label>
         <input
           type="text"
-          name="inscription"
-          value={formData.inscription}
+          name="description"
+          value={formData.description}
           onChange={handleChange}
           className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-            errors.inscription ? 'border-red-500' : ''
+            errors.description ? 'border-red-500' : ''
           }`}
           placeholder="Enter room description"
         />
-        {errors.inscription && <p className="text-red-500 text-sm">{errors.inscription}</p>}
+        {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
       </div>
 
       <div className="mb-4">
