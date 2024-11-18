@@ -36,6 +36,7 @@ const TodoRoomDetail: React.FC<{ roomData: RoomData | null }> = ({ roomData }) =
   const [error, setError] = useState('');
   const [fetchedData, setFetchedData] = useState<RoomData | null>(roomData);
   const [password, setPassword] = useState('');
+  const [showPasswordInput, setShowPasswordInput] = useState(false); // 비밀번호 입력 상태
   const [message, setMessage] = useState('');
 
   useEffect(() => {
@@ -62,14 +63,18 @@ const TodoRoomDetail: React.FC<{ roomData: RoomData | null }> = ({ roomData }) =
     navigate(`/todo-room/${fetchedData?.id}/join`, { state: { todos: fetchedData?.todos } });
   };
 
-  const handleDraw = async () => {
+  const handleDrawClick = () => {
+    setShowPasswordInput(true); // 비밀번호 입력 필드 표시
+  };
+
+  const handleDrawSubmit = async () => {
     try {
-      const response = await API().post('/todo-room/draw', {
-        id: fetchedData?.id,
+      const response = await API().post(`/todo-room/${fetchedData?.id}/draw`, {
         password,
       });
       setFetchedData(response.data);
       setMessage('추첨이 완료되었습니다!');
+      setShowPasswordInput(false); // 비밀번호 입력 필드 숨기기
     } catch (err) {
       setMessage('추첨에 실패했습니다. 비밀번호를 확인해주세요.');
       console.error(err);
@@ -86,7 +91,6 @@ const TodoRoomDetail: React.FC<{ roomData: RoomData | null }> = ({ roomData }) =
 
   const dataToDisplay = fetchedData || roomData;
 
-  // 추첨 버튼 비활성화 여부 및 설명 메시지
   const isDrawButtonDisabled =
     dataToDisplay?.headCount !== dataToDisplay?.todos.length ||
     dataToDisplay?.participantCount !== dataToDisplay?.headCount;
@@ -158,28 +162,43 @@ const TodoRoomDetail: React.FC<{ roomData: RoomData | null }> = ({ roomData }) =
         {dataToDisplay?.state === 'BEFORE' && (
           <div className="mt-6">
             <h3 className="text-xl font-semibold mb-2">추첨하기</h3>
-            <label className="block text-gray-700 font-semibold mb-2">비밀번호:</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="비밀번호를 입력하세요"
-            />
-            {drawButtonMessage && (
-              <p className="text-red-500 text-sm mb-2">{drawButtonMessage}</p>
+            {!showPasswordInput ? (
+              <>
+                <button
+                  onClick={handleDrawClick}
+                  disabled={isDrawButtonDisabled}
+                  className={`w-full py-2 rounded-lg shadow-md focus:outline-none focus:ring-2 mt-4 ${
+                    isDrawButtonDisabled
+                      ? 'bg-gray-300 text-gray-700 cursor-not-allowed'
+                      : 'bg-blue-500 text-white hover:bg-blue-600 focus:ring-blue-500'
+                  }`}
+                >
+                  추첨하기
+                </button>
+                {drawButtonMessage && (
+                  <p className="text-red-500 text-sm mt-2">{drawButtonMessage}</p>
+                )}
+              </>
+            ) : (
+              <>
+                <label className="block text-gray-700 font-semibold mb-2">
+                  비밀번호:
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="비밀번호를 입력하세요"
+                />
+                <button
+                  onClick={handleDrawSubmit}
+                  className="w-full bg-blue-500 text-white font-semibold py-2 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 mt-4"
+                >
+                  확인
+                </button>
+              </>
             )}
-            <button
-              onClick={handleDraw}
-              disabled={isDrawButtonDisabled}
-              className={`w-full py-2 rounded-lg shadow-md focus:outline-none focus:ring-2 mt-4 ${
-                isDrawButtonDisabled
-                  ? 'bg-gray-300 text-gray-700 cursor-not-allowed'
-                  : 'bg-blue-500 text-white hover:bg-blue-600 focus:ring-blue-500'
-              }`}
-            >
-              추첨하기
-            </button>
           </div>
         )}
       </div>
