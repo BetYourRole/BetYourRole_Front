@@ -6,7 +6,7 @@ export const useTodoForm = () => {
     name: '',
     inscription: '',
     headCount: 2,
-    matchingType: 'RATIO',
+    matchingType: "DEFERRED_RATIO",
     point: 100,
     visibility: false,
     todos: [],

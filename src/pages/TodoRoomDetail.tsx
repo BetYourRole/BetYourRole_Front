@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { API } from '../api/API';
 
 interface Todo {
   id: number;
   name: string;
   inscription: string;
+}
+
+interface Participant {
+  name: string;
+  createDate: string;
+  updateDate: string;
 }
 
 interface RoomData {
@@ -19,11 +25,11 @@ interface RoomData {
   state: string;
   visibility: boolean;
   todos: Todo[];
+  participants: Participant[]; // 참가자 목록
 }
 
 const TodoRoomDetail: React.FC<{ roomData: RoomData | null }> = ({ roomData }) => {
-  const { id } = useParams<{ id: string }>(); // URL에서 ID 가져오기
-
+  const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [fetchedData, setFetchedData] = useState<RoomData | null>(roomData);
@@ -40,12 +46,11 @@ const TodoRoomDetail: React.FC<{ roomData: RoomData | null }> = ({ roomData }) =
       }
     };
 
-    // roomData가 null일 경우 데이터 요청
     if (roomData === null && id) {
-      const roomId = parseInt(id, 10); // ID를 정수로 변환
+      const roomId = parseInt(id, 10);
       fetchData(roomId);
     } else {
-      setLoading(false); // roomData가 있을 경우 로딩 종료
+      setLoading(false);
     }
   }, [roomData, id]);
 
@@ -57,7 +62,7 @@ const TodoRoomDetail: React.FC<{ roomData: RoomData | null }> = ({ roomData }) =
     return <div className="text-center text-red-500">{error}</div>;
   }
 
-  const dataToDisplay = fetchedData || roomData; // 최종적으로 표시할 데이터 결정
+  const dataToDisplay = fetchedData || roomData;
 
   return (
     <div className="flex justify-center items-center bg-gray-100 min-h-screen">
@@ -81,11 +86,26 @@ const TodoRoomDetail: React.FC<{ roomData: RoomData | null }> = ({ roomData }) =
             <strong>가시성:</strong> {dataToDisplay?.visibility ? '공개' : '비공개'}
           </div>
         </div>
+
         <h3 className="text-xl font-semibold mt-6 mb-2">할 일 목록</h3>
         <ul className="list-disc list-inside">
           {dataToDisplay?.todos.map((todo) => (
             <li key={todo.id} className="mb-2">
               <strong>{todo.name}:</strong> {todo.inscription}
+            </li>
+          ))}
+        </ul>
+
+        <h3 className="text-xl font-semibold mt-6 mb-2">참가자 목록</h3>
+        <ul className="list-inside">
+          {dataToDisplay?.participants.map((participant, index) => (
+            <li key={index} className="mb-2">
+              <p className="text-gray-700">
+                <strong>이름:</strong> {participant.name}
+              </p>
+              <p className="text-gray-500 text-sm">
+                <strong>참가 날짜:</strong> {new Date(participant.createDate).toLocaleString()}
+              </p>
             </li>
           ))}
         </ul>
