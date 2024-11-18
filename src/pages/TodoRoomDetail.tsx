@@ -137,7 +137,7 @@ const TodoRoomDetail: React.FC<{ roomData: RoomData | null }> = ({ roomData }) =
                 <strong>이름:</strong> {participant.name}
               </p>
               <p className="text-gray-500 text-sm">
-                <strong>참가 날짜:</strong> {new Date(participant.createDate).toLocaleDateString()}
+                <strong>참가 날짜:</strong> {new Date(participant.createDate).toLocaleString()}
               </p>
             </li>
           ))}
