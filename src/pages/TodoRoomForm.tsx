@@ -36,9 +36,14 @@ const TodoRoomForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    const instance = API()
+
     const data = formData;
     data.todos = roles;
-    const respone = await API().post("/todo-room", data);
+    const token = localStorage.getItem('accessToken');
+    if(token) instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+    const respone = await instance.post("/todo-room", data);
     const result:TodoRoom = respone.data;
 
     navigate(`/todo-room/${result.id}`);

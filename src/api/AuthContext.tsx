@@ -17,7 +17,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // 초기 로드 시 쿠키에서 토큰 가져오기
   useEffect(() => {
-    const token = Cookies.get('accessToken');
+    const token = localStorage.getItem('accessToken');
     if (token) {
       setAccessToken(token);
     }
@@ -28,19 +28,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const params = new URLSearchParams(location.search);
     const token = params.get('accessToken');
     if (token) {
-      Cookies.set('accessToken', token, { expires: 1, secure: true }); // 1일 만료, secure 옵션 설정
+      localStorage.setItem('accessToken', token);
+      // Cookies.set('accessToken', token, { expires: 1, secure: true }); // 1일 만료, secure 옵션 설정
       setAccessToken(token);
       navigate('/', { replace: true });
     }
   }, [location, navigate]);
 
   const login = (token: string) => {
-    Cookies.set('accessToken', token, { expires: 1, secure: true });
+    localStorage.setItem('accessToken', token);
+    // Cookies.set('accessToken', token, { expires: 1, secure: true });
     setAccessToken(token);
   };
 
   const logout = () => {
-    Cookies.remove('accessToken');
+    localStorage.removeItem('accessToken');
     setAccessToken(null);
   };
 
