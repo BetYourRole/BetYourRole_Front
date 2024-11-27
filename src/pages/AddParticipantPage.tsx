@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { API } from '../api/API';
 import { Todo } from './types';
+import { useAuth } from '../api/AuthContext';
 
 const AddParticipantPage: React.FC = () => {
   const { url } = useParams<{ url: string }>();
@@ -15,6 +16,8 @@ const AddParticipantPage: React.FC = () => {
   const [warning, setWarning] = useState<string>('');
   const [bettings, setBettings] = useState<{ todoId: number; point: number; comment: string }[]>([]);
   const [maxPoint, setMaxPoint] = useState<number>(state?.maxPoint || 0);
+  const { isLoggedIn } = useAuth();
+
 
   // Fetch todos if not provided in state
   useEffect(() => {
@@ -74,7 +77,7 @@ const AddParticipantPage: React.FC = () => {
       setMessage('참가자 이름을 입력해주세요.');
       return;
     }
-    if (!password) {
+    if (isLoggedIn && !password) {
       setMessage('비밀번호를 입력해주세요.');
       return;
     }
@@ -115,15 +118,17 @@ const AddParticipantPage: React.FC = () => {
           placeholder="이름을 입력하세요"
         />
 
-        <label className="block text-gray-700 font-semibold mb-2 mt-4">비밀번호:</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="비밀번호를 입력하세요"
-        />
-        {message && <p className="text-red-500 text-sm mt-2">{message}</p>}
+        {!isLoggedIn && (<>
+          <label className="block text-gray-700 font-semibold mb-2 mt-4">비밀번호:</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="비밀번호를 입력하세요"
+          />
+          {message && <p className="text-red-500 text-sm mt-2">{message}</p>}
+        </>)}
 
         <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-4">할 일 목록</h3>
         {bettings.length > 0 &&
