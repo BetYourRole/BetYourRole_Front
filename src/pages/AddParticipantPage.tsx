@@ -1,29 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { API } from '../api/API';
-
-interface Todo {
-  id: number;
-  name: string;
-  description: string;
-}
+import { Todo } from './types';
 
 const AddParticipantPage: React.FC = () => {
-  const { url } = useParams<{ url: string }>(); // URL에서 roomId 가져오기
-  const { state } = useLocation(); // useLocation으로 상태 가져오기
+  const { url } = useParams<{ url: string }>();
+  const { state } = useLocation();
   const navigate = useNavigate();
-  
-  const todos: Todo[] = state.todos || []; // 상태에서 todos 가져오기
-  const [participantName, setParticipantName] = useState(''); // 참가자 이름 상태
-  const [password, setPassword] = useState(''); // 비밀번호 상태
-  const [message, setMessage] = useState(''); // 메시지 상태
-  const [bettings, setBettings] = useState(
-    todos.map((todo) => ({
-      todoId: todo.id,
-      point: 0,
-      comment: '',
-    }))
-  ); // 각 할 일 별 점수와 코멘트 상태 관리
+
+  const [todos, setTodos] = useState<Todo[]>(state?.todos || []);
+  const [participantName, setParticipantName] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [message, setMessage] = useState<string>('');
+  const [bettings, setBettings] = useState<{ todoId: number; point: number; comment: string }[]>([]);
+
+  // Fetch todos if not provided in state
+  useEffect(() => {
+    if (url !== undefined && (!state || !state.todos)) {
+      const fetchTodos = async (url: string) => {
+        try {
+          const response = await API().get(`/todo-room/${url}`);
+          setTodos(response.data.todos);
+        } catch (error) {
+          console.error('Error fetching todos:', error);
+        }
+      };
+      fetchTodos(url);
+    }
+  }, [url, state]);
+
+  // Initialize bettings when todos are updated
+  useEffect(() => {
+    if (todos.length > 0) {
+      setBettings(
+        todos.map((todo) => ({
+          todoId: todo.id,
+          point: 0,
+          comment: '',
+        }))
+      );
+    }
+  }, [todos]);
 
   const handleBettingChange = (index: number, field: 'point' | 'comment', value: string | number) => {
     const updatedBettings = [...bettings];
@@ -47,13 +64,13 @@ const AddParticipantPage: React.FC = () => {
 
     try {
       const response = await API().post(`/participant/${url}`, {
-        name: participantName, // 참가자 이름
+        name: participantName,
         password,
         bettings,
       });
       setMessage('참가에 성공했습니다!');
       console.log(response.data);
-      navigate(`/todo-room/${url}`); // 성공 시 상세 페이지로 이동
+      navigate(`/todo-room/${url}`);
     } catch (err) {
       setMessage('참가에 실패했습니다. 다시 시도해주세요.');
       console.error(err);
@@ -88,28 +105,29 @@ const AddParticipantPage: React.FC = () => {
         {message && <p className="text-red-500 text-sm mt-2">{message}</p>}
 
         <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-4">할 일 목록</h3>
-        {todos.map((todo, index) => (
-          <div key={todo.id} className="mb-4">
-            <p className="font-semibold text-gray-700">{todo.name}</p>
-            <p className="text-gray-500 text-sm">{todo.description}</p>
-            <label className="block text-gray-700 mt-2">점수:</label>
-            <input
-              type="number"
-              value={bettings[index].point}
-              onChange={(e) => handleBettingChange(index, 'point', parseInt(e.target.value, 10))}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="점수를 입력하세요"
-            />
-            <label className="block text-gray-700 mt-2">코멘트:</label>
-            <input
-              type="text"
-              value={bettings[index].comment}
-              onChange={(e) => handleBettingChange(index, 'comment', e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="코멘트를 입력하세요"
-            />
-          </div>
-        ))}
+        {bettings.length > 0 &&
+          todos.map((todo, index) => (
+            <div key={todo.id} className="mb-4">
+              <p className="font-semibold text-gray-700">{todo.name}</p>
+              <p className="text-gray-500 text-sm">{todo.description}</p>
+              <label className="block text-gray-700 mt-2">점수:</label>
+              <input
+                type="number"
+                value={bettings[index]?.point || 0}
+                onChange={(e) => handleBettingChange(index, 'point', parseInt(e.target.value, 10))}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="점수를 입력하세요"
+              />
+              <label className="block text-gray-700 mt-2">코멘트:</label>
+              <input
+                type="text"
+                value={bettings[index]?.comment || ''}
+                onChange={(e) => handleBettingChange(index, 'comment', e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="코멘트를 입력하세요"
+              />
+            </div>
+          ))}
 
         <button
           type="submit"
