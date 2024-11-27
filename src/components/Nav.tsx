@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../api/AuthContext';
 
 const Nav: React.FC = () => {
-  const { accessToken, logout } = useAuth();
+  const { accessToken, login, logout } = useAuth();
 
   return (
     <div className="flex justify-between px-16 py-8 items-center sticky w-full bg-white top-0">

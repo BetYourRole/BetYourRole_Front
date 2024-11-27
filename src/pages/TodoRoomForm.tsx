@@ -32,7 +32,6 @@ const TodoRoomForm: React.FC = () => {
   const handleBack = () => {
     setStep(1); // 이전 단계로 이동
   };
-  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

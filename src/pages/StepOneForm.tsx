@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Data } from './types'
+import { useAuth } from '../api/AuthContext';
 
 interface StepOneFormProps{
   formData: Data;
@@ -9,6 +10,7 @@ interface StepOneFormProps{
 
 const StepOneForm: React.FC<StepOneFormProps> = ({ formData, handleChange, handleNext }) => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const { isLoggedIn } = useAuth();
 
   // 유효성 검사 함수
   const validateForm = () => {
@@ -60,6 +62,23 @@ const StepOneForm: React.FC<StepOneFormProps> = ({ formData, handleChange, handl
         />
         {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
       </div>
+
+      {!isLoggedIn && (
+        <div className="mb-4">
+          <label className="block text-gray-700 font-semibold mb-2">비밀번호:</label>
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              errors.password ? 'border-red-500' : ''
+            }`}
+            placeholder="Enter room password"
+          />
+          {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+        </div>
+      )}
 
       <div className="mb-4">
         <label className="block text-gray-700 font-semibold mb-2">인원수(2 이상):</label>
