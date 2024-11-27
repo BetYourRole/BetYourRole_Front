@@ -11,8 +11,8 @@ function App() {
       <Nav />
       <Routes>
         <Route path="/" element={<MakeTodoRoom />} />
-        <Route path="/todo-room/:id" element={<TodoRoomDetail roomData={null} />} />
-        <Route path="/todo-room/:id/join" element={<AddParticipantPage />} />
+        <Route path="/todo-room/:url" element={<TodoRoomDetail roomData={null} />} />
+        <Route path="/todo-room/:url/join" element={<AddParticipantPage />} />
       </Routes>
     </>
   );

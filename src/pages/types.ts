@@ -17,7 +17,7 @@ export interface Role {
   }
 
   export interface TodoRoom{
-    id: number;
+    url: string;
     name: string;
     description: string;
     headCount: number;

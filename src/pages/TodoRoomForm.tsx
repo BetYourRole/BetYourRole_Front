@@ -46,7 +46,7 @@ const TodoRoomForm: React.FC = () => {
     const respone = await instance.post("/todo-room", data);
     const result:TodoRoom = respone.data;
 
-    navigate(`/todo-room/${result.id}`);
+    navigate(`/todo-room/${result.url}`);
   };
 
   return (

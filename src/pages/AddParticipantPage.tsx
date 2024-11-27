@@ -9,7 +9,7 @@ interface Todo {
 }
 
 const AddParticipantPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // URL에서 roomId 가져오기
+  const { url } = useParams<{ url: string }>(); // URL에서 roomId 가져오기
   const { state } = useLocation(); // useLocation으로 상태 가져오기
   const navigate = useNavigate();
   
@@ -46,15 +46,14 @@ const AddParticipantPage: React.FC = () => {
     }
 
     try {
-      const response = await API().post('/participant', {
-        roomId: id,
+      const response = await API().post(`/participant/${url}`, {
         name: participantName, // 참가자 이름
         password,
         bettings,
       });
       setMessage('참가에 성공했습니다!');
       console.log(response.data);
-      navigate(`/todo-room/${id}`); // 성공 시 상세 페이지로 이동
+      navigate(`/todo-room/${url}`); // 성공 시 상세 페이지로 이동
     } catch (err) {
       setMessage('참가에 실패했습니다. 다시 시도해주세요.');
       console.error(err);

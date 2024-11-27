@@ -16,7 +16,7 @@ interface Participant {
 }
 
 interface RoomData {
-  id: number;
+  url: string;
   name: string;
   description: string;
   headCount: number;
@@ -30,7 +30,7 @@ interface RoomData {
 }
 
 const TodoRoomDetail: React.FC<{ roomData: RoomData | null }> = ({ roomData }) => {
-  const { id } = useParams<{ id: string }>();
+  const { url } = useParams<{ url: string }>();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -40,9 +40,9 @@ const TodoRoomDetail: React.FC<{ roomData: RoomData | null }> = ({ roomData }) =
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    const fetchData = async (id: number) => {
+    const fetchData = async (url: string) => {
       try {
-        const response = await API().get(`/todo-room/${id}`);
+        const response = await API().get(`/todo-room/${url}`);
         setFetchedData(response.data);
       } catch (err) {
         setError('방 정보를 불러오는 데 실패했습니다.');
@@ -51,16 +51,15 @@ const TodoRoomDetail: React.FC<{ roomData: RoomData | null }> = ({ roomData }) =
       }
     };
 
-    if (roomData === null && id) {
-      const roomId = parseInt(id, 10);
-      fetchData(roomId);
+    if (roomData === null && url) {
+      fetchData(url);
     } else {
       setLoading(false);
     }
-  }, [roomData, id]);
+  }, [roomData, url]);
 
   const handleJoinRoom = () => {
-    navigate(`/todo-room/${fetchedData?.id}/join`, { state: { todos: fetchedData?.todos } });
+    navigate(`/todo-room/${fetchedData?.url}/join`, { state: { todos: fetchedData?.todos } });
   };
 
   const handleDrawClick = () => {
@@ -69,7 +68,7 @@ const TodoRoomDetail: React.FC<{ roomData: RoomData | null }> = ({ roomData }) =
 
   const handleDrawSubmit = async () => {
     try {
-      const response = await API().post(`/todo-room/${fetchedData?.id}/draw`, {
+      const response = await API().post(`/todo-room/${fetchedData?.url}/draw`, {
         password,
       });
       setFetchedData(response.data);
