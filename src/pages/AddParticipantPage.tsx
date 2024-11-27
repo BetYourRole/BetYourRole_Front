@@ -12,7 +12,9 @@ const AddParticipantPage: React.FC = () => {
   const [participantName, setParticipantName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [message, setMessage] = useState<string>('');
+  const [warning, setWarning] = useState<string>('');
   const [bettings, setBettings] = useState<{ todoId: number; point: number; comment: string }[]>([]);
+  const [maxPoint, setMaxPoint] = useState<number>(state?.maxPoint || 0);
 
   // Fetch todos if not provided in state
   useEffect(() => {
@@ -21,6 +23,7 @@ const AddParticipantPage: React.FC = () => {
         try {
           const response = await API().get(`/todo-room/${url}`);
           setTodos(response.data.todos);
+          setMaxPoint(response.data.point);
         } catch (error) {
           console.error('Error fetching todos:', error);
         }
@@ -42,6 +45,10 @@ const AddParticipantPage: React.FC = () => {
     }
   }, [todos]);
 
+  const calculateTotalPoints = () => {
+    return bettings.reduce((sum, betting) => sum + (betting.point || 0), 0);
+  };
+
   const handleBettingChange = (index: number, field: 'point' | 'comment', value: string | number) => {
     const updatedBettings = [...bettings];
     updatedBettings[index] = {
@@ -49,6 +56,16 @@ const AddParticipantPage: React.FC = () => {
       [field]: value,
     };
     setBettings(updatedBettings);
+
+    // Check if total points exceed maxPoint
+    if (field === 'point') {
+      const totalPoints = calculateTotalPoints() + (value as number) - bettings[index].point;
+      if (totalPoints > maxPoint) {
+        setWarning(`총 점수가 최대 점수(${maxPoint})를 초과했습니다.`);
+      } else {
+        setWarning('');
+      }
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -59,6 +76,10 @@ const AddParticipantPage: React.FC = () => {
     }
     if (!password) {
       setMessage('비밀번호를 입력해주세요.');
+      return;
+    }
+    if (calculateTotalPoints() > maxPoint) {
+      setWarning('총 점수가 최대 점수를 초과하여 참가할 수 없습니다.');
       return;
     }
 
@@ -128,7 +149,8 @@ const AddParticipantPage: React.FC = () => {
               />
             </div>
           ))}
-
+          
+        {warning && <p className="text-yellow-500 text-sm mt-2">{warning}</p>}
         <button
           type="submit"
           className="w-full bg-blue-500 text-white font-semibold py-2 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 mt-4"

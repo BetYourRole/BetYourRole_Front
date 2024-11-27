@@ -59,7 +59,7 @@ const TodoRoomDetail: React.FC<{ roomData: RoomData | null }> = ({ roomData }) =
   }, [roomData, url]);
 
   const handleJoinRoom = () => {
-    navigate(`/todo-room/${fetchedData?.url}/join`, { state: { todos: fetchedData?.todos } });
+    navigate(`/todo-room/${fetchedData?.url}/join`, { state: { todos: fetchedData?.todos, maxPoint: fetchedData?.point } });
   };
 
   const handleDrawClick = () => {
