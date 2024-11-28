@@ -97,5 +97,22 @@ export const isValidAccessToken= ():boolean => {
 interface JwtPayload {
   exp?: number;  // 만료 시간 (expiration)
   iat?: number;  // 발행 시간 (issued at)
+  sub?: string;
   // 필요한 경우 추가 필드를 정의할 수 있습니다.
+}
+
+export const getTokenEmail = (): string => {
+  const token = localStorage.getItem('accessToken');
+  try {
+    if(token){
+      const decoded = jwtDecode<JwtPayload>(token);
+      if (decoded.sub) {
+        return decoded.sub;
+      }
+    }
+    return "";
+  } catch (error) {
+    console.error('토큰 디코딩 실패:', error);
+    return "";
+  }
 }

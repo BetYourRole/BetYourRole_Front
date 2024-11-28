@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { isValidAccessToken } from './AuthContext';
+import { isTokenExpired } from './AuthContext';
 
 export const API = (): AxiosInstance => {
   const instance = axios.create({
@@ -12,12 +12,14 @@ export const API = (): AxiosInstance => {
 
  instance.interceptors.request.use(
   async (config) => {
+    let accessToken = localStorage.getItem('accessToken');
 
     // Access Token의 유효성 확인
-    if (isValidAccessToken()) {
+    if (accessToken && isTokenExpired(accessToken)) {
       try {
         const newAccessToken = await getNewAccessToken();
         if (newAccessToken) {
+          accessToken = newAccessToken;
           localStorage.setItem('accessToken', newAccessToken);
           config.headers['Authorization'] = `Bearer ${newAccessToken}`;
         }

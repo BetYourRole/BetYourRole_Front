@@ -77,7 +77,7 @@ const AddParticipantPage: React.FC = () => {
       setMessage('참가자 이름을 입력해주세요.');
       return;
     }
-    if (isLoggedIn && !password) {
+    if (!isLoggedIn && !password) {
       setMessage('비밀번호를 입력해주세요.');
       return;
     }
@@ -85,7 +85,6 @@ const AddParticipantPage: React.FC = () => {
       setWarning('총 점수가 최대 점수를 초과하여 참가할 수 없습니다.');
       return;
     }
-
     try {
       const response = await API().post(`/participant/${url}`, {
         name: participantName,
