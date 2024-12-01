@@ -7,7 +7,12 @@ interface Todo {
   id: number;
   name: string;
   description: string;
-  winner: string | null;
+  winner: Winner;
+}
+
+interface Winner {
+  name: string;
+  comment: string;
 }
 
 interface Participant {
@@ -185,7 +190,7 @@ const TodoRoomDetail: React.FC<{ roomData: RoomData | null }> = ({ roomData }) =
             <li key={todo.id} className="mb-2">
               <strong>{todo.name}:</strong> {todo.description}
               {todo.winner && (
-                <p className="text-blue-500 text-sm">승자: {todo.winner}</p>
+                <p className="text-blue-500 text-sm">승자: {todo.winner.name} {todo.winner.comment.length !== 0 && " \""+(todo.winner.comment)+"\""}</p>
               )}
             </li>
           ))}

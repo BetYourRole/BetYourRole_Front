@@ -82,7 +82,7 @@ const Nav: React.FC = () => {
       {/* 메뉴 */}
       <div className="menu flex gap-8">
         <Menu url="/" name="새 할일 생성" />
-        <Menu url="/how-to-use" name="사용방법" />
+        {/* <Menu url="/how-to-use" name="사용방법" /> */}
 
         {/* 로그인/로그아웃 상태에 따라 버튼 표시 */}
         {accessToken ? (
