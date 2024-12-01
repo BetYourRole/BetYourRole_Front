@@ -52,7 +52,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setAccessToken(null);
     setIsLoggedIn(false);
     //여기 리프레시는 왜 안없앰? 원래 그러나
+    Cookies.remove('refreshToken', { path: '/' });
+    // 쿠키는 만료시간 지나면 알아서 삭제된다고 그러긴하던디 일단 넣음
   };
+  
+  // 강제 로그아웃 이벤트 리스너 추가
+  useEffect(() => {
+    const handleForceLogout = () => {
+      logout();
+    };
+
+    window.addEventListener('forceLogout', handleForceLogout);
+    return () => window.removeEventListener('forceLogout', handleForceLogout);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ accessToken, login, logout, isLoggedIn }}>

@@ -52,6 +52,10 @@ const getNewAccessToken = async (): Promise<string | null> => {
     return null;
   } catch (error) {
     console.error('Access Token 재발급 요청 실패:', error);
+    window.dispatchEvent(new CustomEvent('forceLogout'));
+    
+    alert('로그인이 만료되었습니다. 다시 로그인해주세요.');
+    window.location.href = '/';
     return null;
   }
 };
